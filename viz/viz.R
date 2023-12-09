@@ -144,3 +144,47 @@ data.frame(student = c("Justin", "Justin", "Justin"),
   theme_bar_narrow
 
 ggsave("justin_counterfactual.svg", height = 3, width = 5, units = "in")
+
+# --------------------
+# Causal DAG
+# --------------------
+
+library(visNetwork)
+library(igraph)
+
+dag <- read_csv("dag_cpdag_estimator_results.csv")
+
+nodes <- dag %>%
+  gather(from, to, key = 'dir', value = 'label') %>%
+  distinct(label) %>%
+  mutate(label = ifelse(label == 'depression_dx_in_next_6m', 'depression_dx_in_next_12m', label)) %>%
+  mutate(id = row_number())
+
+edges <- dag %>%
+  filter(type == "Edge Coef.") %>%
+  mutate(from = ifelse(from == 'depression_dx_in_next_6m', 'depression_dx_in_next_12m', from),
+         to = ifelse(to == 'depression_dx_in_next_6m', 'depression_dx_in_next_12m', to)) %>%
+  left_join(nodes, by = c('from' = 'label')) %>%
+  left_join(nodes, by = c('to' = 'label')) %>%
+  rename(from_nm = from,
+         to_nm = to,
+         from = id.x,
+         to = id.y) %>%
+  select(from_nm, to_nm, from, to)
+
+# Entire graph
+visNetwork(nodes, edges, width = '100%', height = '1000px', idToLabel = F) %>%
+  visOptions(highlightNearest = list(enabled = T, degree = 1, hover = T),
+             selectedBy = 'label') %>% # Markov blanket
+  visNodes(color = "#069D9A",
+           size = 13, borderWidth = 0, physics = T,
+           font = list(size = 35)) %>% #fixed = T
+  visEdges(color = "#069D9A", #"#84dbda",
+           smooth = F,
+           arrows = list(to = list(
+             scaleFactor = 0.1,
+             enabled = T))
+           ) %>%
+  visIgraphLayout(layout= "layout.sphere", physics = F, smooth = F) %>%
+  visEvents(type = 'once', startStabilizing = 'function() {
+  this.moveTo({scale:0.3})}')
