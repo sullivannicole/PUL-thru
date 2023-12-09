@@ -14,7 +14,7 @@ import random
 import dowhy.gcm as gcm
 import networkx as nx
 
-main = pd.read_csv('Q:\\Data2\\HopkinsPublicSchool\\sull1120\\data\\coxph_featurization\\main.csv')
+main = pd.read_csv('<<path>>.csv')
 
 main['other_race_ethn'] = np.select(
     [
@@ -217,13 +217,13 @@ eval_df = pd.DataFrame({'backtest_dt': test_dt_arr,
                         'test_tp': test_tps,
                         'test_auprc': test_auprcs})
 
-eval_df.to_csv(f'Q:\\Data2\\HopkinsPublicSchool\\sull1120\\model\\puestimator\\20231128_eval.csv', index = False)
+eval_df.to_csv(f'<<path>>.csv', index = False)
 
 roc_df = pd.concat(test_roc_curves)
-roc_df.to_csv(f'Q:\\Data2\\HopkinsPublicSchool\\sull1120\\model\\puestimator\\20231126_roc.csv', index = False)
+roc_df.to_csv(f'<<path>>.csv', index = False)
 
 prc_df = pd.concat(test_pr_curves)
-prc_df.to_csv(f'Q:\\Data2\\HopkinsPublicSchool\\sull1120\\model\\puestimator\\20231126_prc.csv', index = False)
+prc_df.to_csv(f'<<path>>>', index = False)
 
 # ----------------------
 # Feature importance
@@ -245,7 +245,7 @@ np.array(feature_importance['importances']).T
 
 feat_imp_df = pd.DataFrame(np.array(feature_importance['importances']).T, columns = feature_names)
 feat_imp_df['test_dt'] = pred_dt
-feat_imp_df.to_csv(f'Q:\\Data2\\HopkinsPublicSchool\\sull1120\\model\\puestimator\\20231128_feat_imp.csv', index = False)
+feat_imp_df.to_csv(f'<<path>>', index = False)
 
 # -----------------
 # Fairness
@@ -281,7 +281,7 @@ fairness = list(map(lambda x: {'feat': x,
                                }, sensitive_feats))
 
 fairness_df = pd.DataFrame.from_dict(fairness)
-fairness_df.to_csv(f'Q:\\Data2\\HopkinsPublicSchool\\sull1120\\model\\puestimator\\20231128_fairness.csv', index = False)
+fairness_df.to_csv(f'<<path>>', index = False)
 
 # Fairness, back-tests combined
 backtests = pd.concat(test_preds)
@@ -387,8 +387,8 @@ fairness_df = pd.DataFrame.from_dict(fairness)
 # Counterfactual
 # -----------------
 
-tetrad = pd.read_csv('Q:\\Data2\\HopkinsPublicSchool\\sull1120\\model\\causal\\20231030\\dag_cpdag_estimator_results.csv')
-tetrad_data = pd.read_csv("Q:\\Data2\\HopkinsPublicSchool\\sull1120\\data\\tables\\causal\\03_main_sans_id.csv")
+tetrad = pd.read_csv('<<path>>')
+tetrad_data = pd.read_csv("<<path>>")
 tetrad_edges = tetrad.query('type == "Edge Coef."')
 
 tetrad_graph = nx.from_pandas_edgelist(tetrad_edges, source = 'from', target = 'to', create_using = nx.DiGraph)
