@@ -7,9 +7,9 @@ library(survival)
 library(yardstick)
 library(probably)
 
-# train <- read_csv("Q:\\Data2\\HopkinsPublicSchool\\sull1120\\data\\coxph_featurization\\train.csv")
-# test <- read_csv("Q:\\Data2\\HopkinsPublicSchool\\sull1120\\data\\coxph_featurization\\test.csv")
-main <- read_csv("Q:\\Data2\\HopkinsPublicSchool\\sull1120\\data\\coxph_featurization\\main.csv")
+# train <- read_csv("<<path>>")
+# test <- read_csv("<<path>>")
+main <- read_csv("<<path>>")
 
 main <- depress_cohort2
 options(digits = 3)
@@ -349,47 +349,3 @@ individ_preds_df %>%
   geom_density(alpha = 0.4) +
   xlim(0, 0.1) +
   theme(legend.position = "bottom")
-
-
-# -------------------
-# Other useful code
-# -------------------
-
-# ROC curve
-ggplot(test_roc_thresh_df, aes(1-specificity, sensitivity)) +
-  # geom_point() +
-  geom_line() +
-  geom_abline(slope = 1, intercept = 0, linetype = 'dotted', size = 0.8)
-
-# J index vs. sensitivity/specificity cut-off
-ggplot(test_roc_thresholds, aes(.threshold, y = .estimate, color = .metric)) +
-  geom_line()
-
-# Calibration plots
-# test_pred_df %>%
-#   mutate(depression_dx_in_next_6m = as.numeric(depression_dx_in_next_6m)) %>%
-#   cal_plot_breaks(depression_dx_in_next_6m, predict, num_breaks = 5)
-
-# test_pred_df %>%
-#   mutate(depression_dx_in_next_6m = as.numeric(depression_dx_in_next_6m)) %>%
-#   cal_plot_windowed(depression_dx_in_next_6m, predict, window_size = 0.2, step_size = 0.1)
-
-# Survival plot
-# autoplot(survfit(depress_coxph)) +
-#   labs(x = 'Time (t) in months',
-#        y = 'Probability of not receiving a depression dx')
-
-ggplot() +
-  geom_point(aes(mresids, test$depression_dx_in_next_6m), size = 2.8, alpha = 0.8)
-
-
-depress_aareg <- aareg(Surv(tstart, tstop, depression_dx_in_next_6m) ~ exc_absence + exc_tardy + unexc_absence + unexc_tardy + lang_english + genderf + 
-                         psychiatric_disorder_non_depressive + minor_infraction + police +
-                         white + age_at_pred_natural + yrs_enrolled_in_hopkins_ps + FR_status + A_grades + F_grades + homeless_y_in_yr + 
-                         father, data = student_main)
-
-options(digits=2)
-autoplot(depress_aareg) +
-  theme(legend.position = "none")
-
-depress_aareg
