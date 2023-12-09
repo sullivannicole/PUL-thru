@@ -11,7 +11,7 @@ library(sqldf)
 # Data import 
 # --------------
 
-enrolled <- read_csv("Q:\\Data2\\HopkinsPublicSchool\\Workspace\\gopher_data\\clean_data\\enrollment\\overall_cleaned_enrollment_updated.csv")
+enrolled <- read_csv("overall_cleaned_enrollment_updated.csv")
 
 # --------------
 # Base cohort
@@ -65,7 +65,7 @@ cohort_w_pred_dts <- sqldf("
 # Attendance
 # --------------
 
-attend <- read_csv("Q:\\Data2\\HopkinsPublicSchool\\Workspace\\gopher_data\\clean_data\\secondary_attendance\\2022_06_17_secondary_attendance_concatenated.csv")
+attend <- read_csv("2022_06_17_secondary_attendance_concatenated.csv")
 
 attend_tidy <- attend %>% mutate(absent_dt = as_date(mdy(date)))
 
@@ -110,7 +110,7 @@ attend_wide <- attend_categories %>%
 # Behavior
 # --------------
 
-behavior <- read_csv("Q:\\Data2\\HopkinsPublicSchool\\Workspace\\gopher_data\\clean_data\\behavior\\to_use.csv")
+behavior <- read_csv("gopher_data\\clean_data\\behavior\\to_use.csv")
 
 resolutions <- sqldf("
                      WITH res_unique AS (SELECT DISTINCT resolution_name
@@ -153,8 +153,8 @@ behav_counts <- behav_w_pred_dts %>%
 # Comorbidities
 # -----------------
 
-conditions <- read_csv("Q:\\Data2\\HopkinsPublicSchool\\Workspace\\gopher_data\\clean_data\\health_conditions\\to_use.csv")
-condition_class <- read_csv("Q:\\Data2\\HopkinsPublicSchool\\sull1120\\ancillary_data\\condition_classifications.csv")
+conditions <- read_csv("Workspace\\gopher_data\\clean_data\\health_conditions\\to_use.csv")
+condition_class <- read_csv("ancillary_data\\condition_classifications.csv")
 
 conditions_tidy <- conditions %>%
   mutate(condition_start_date = as_date(mdy(condition_start_date))) %>%
@@ -181,7 +181,7 @@ comorbidities <- sqldf("SELECT b.student_id, b.person_id, a.pred_dt,
 # -----------------
 
 # language spoken at home, sex at birth
-demos <- read_csv("Q:\\Data2\\HopkinsPublicSchool\\Workspace\\gopher_data\\clean_data\\demographics\\2022_06_17_demographics_by_student.csv")
+demos <- read_csv("Workspace\\gopher_data\\clean_data\\demographics\\2022_06_17_demographics_by_student.csv")
 
 cohort_demo <- sqldf("
       SELECT a.student_id, a.person_id, a.enrollment_start, a.enrollment_end, a.pred_dt, b.birth_date,  
@@ -261,7 +261,7 @@ cohort_demo_full <- cohort_demo %>%
 # F/R status
 # -----------------
 
-fr_lunch <- read_csv("Q:\\Data2\\HopkinsPublicSchool\\Workspace\\gopher_data\\clean_data\\free_reduced\\concatenated_file.csv")
+fr_lunch <- read_csv("Workspace\\gopher_data\\clean_data\\free_reduced\\concatenated_file.csv")
 
 fr_lunch_tidy <- fr_lunch %>%
   distinct(student_id, eligibility, year) %>%
@@ -289,9 +289,9 @@ fr_lunch_w_dt <- fr_lunch_agg %>%
 # Grades
 # -----------
 
-gpa <- read_csv("Q:\\Data2\\HopkinsPublicSchool\\Workspace\\gopher_data\\clean_data\\gpa\\term gpa\\cleaned_termgpa.csv")
-grades <- read_csv("Q:\\Data2\\HopkinsPublicSchool\\Workspace\\gopher_data\\clean_data\\grades\\secondary\\cleaned_sec_grades.csv")
-term_key <- read_csv("Q:\\Data2\\HopkinsPublicSchool\\Workspace\\gopher_data\\documentation_files\\2022_05_12_term_key.csv")
+gpa <- read_csv("Workspace\\gopher_data\\clean_data\\gpa\\term gpa\\cleaned_termgpa.csv")
+grades <- read_csv("gopher_data\\clean_data\\grades\\secondary\\cleaned_sec_grades.csv")
+term_key <- read_csv("Workspace\\gopher_data\\documentation_files\\2022_05_12_term_key.csv")
 
 grades_w_categories <- grades %>%
   select(student_id, year, course_name, term_name, rask, score) %>%
@@ -394,7 +394,7 @@ grades_wide <- grades_0_6mo %>%
 # Homeless
 # ---------------
 
-homeless_status <- read_csv("Q:\\Data2\\HopkinsPublicSchool\\Workspace\\gopher_data\\clean_data\\homeless_tag\\concatenated_file_2.csv")
+homeless_status <- read_csv("Workspace\\gopher_data\\clean_data\\homeless_tag\\concatenated_file_2.csv")
 
 homeless_tidy <- homeless_status %>%
   rename(student_id = `Student Number`,
@@ -434,7 +434,7 @@ cohort_homeless <- sqldf("WITH homeless_yr AS (
 # Household
 # -------------
 
-household <- read_csv("Q:\\Data2\\HopkinsPublicSchool\\Workspace\\gopher_data\\clean_data\\household\\2023_06_26\\2023_06_26_household_concatenated_raw.csv")
+household <- read_csv("Workspace\\gopher_data\\clean_data\\household\\2023_06_26\\2023_06_26_household_concatenated_raw.csv")
 
 check_mbrs <- household %>%
   distinct(Relationship)
@@ -557,18 +557,18 @@ depress_cohort2 <- depress_cohort %>%
          tstart = tstop-6) %>%
   select(-row_n)
 
-write_csv(depress_cohort2, "Q:\\Data2\\HopkinsPublicSchool\\sull1120\\data\\coxph_featurization\\main.csv")
+write_csv(depress_cohort2, "data\\coxph_featurization\\main.csv")
 
 # Use back-testing instead
 # train <- student_main %>%
 #   filter(year(pred_dt) <= 2017)
 # 
-# write_csv(train, "Q:\\Data2\\HopkinsPublicSchool\\sull1120\\data\\coxph_featurization\\train.csv")
+# write_csv(train, "data\\coxph_featurization\\train.csv")
 # 
 # test <- student_main %>%
 #   filter(year(pred_dt) > 2017 & year(pred_dt) < 2020)
 # 
-# write_csv(test, "Q:\\Data2\\HopkinsPublicSchool\\sull1120\\data\\coxph_featurization\\test.csv")
+# write_csv(test, "data\\coxph_featurization\\test.csv")
 # 
 # test %>%
 #   group_by(depression_dx_in_next_6m) %>%
