@@ -77,11 +77,11 @@ all_mods = list(map(lambda x: h2o.get_model(x), lb_all_pd['model_id'].values))
 exp_id = '_'.join(aml10.project_name.split('_')[-2:])
 
 # Save leaderboard
-lb_all_pd.to_csv(f'Q:\\Data2\\HopkinsPublicSchool\\sull1120\\model\\experiments\\{exp_id}_leaderboard.csv', index = False)
+lb_all_pd.to_csv(f'<<path>>\\{exp_id}_leaderboard.csv', index = False)
 
 # Save out models
 for i in all_mods:
-    model_path = h2o.save_model(model = i, path = f'Q:\\Data2\\HopkinsPublicSchool\\sull1120\\model\\experiments\\{exp_id}\\{i.model_id}', force = True)
+    model_path = h2o.save_model(model = i, path = f'<<path>>\\model\\experiments\\{exp_id}\\{i.model_id}', force = True)
 
 # saved_model1 = h2o.load_model(model_path)
 
@@ -188,5 +188,5 @@ eval_df = pd.DataFrame({'model_id': model_ids,
                         'test_tp': test_tps,
                         'test_auprc': test_auprcs})
 
-eval_df.to_csv(f'Q:\\Data2\\HopkinsPublicSchool\\sull1120\\model\\experiments\\{exp_id}_eval.csv', index = False)
+eval_df.to_csv(f'<<path>>\\model\\experiments\\{exp_id}_eval.csv', index = False)
 # h2o.shutdown()
